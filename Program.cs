@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using TodoAPI.Data;
+using TodoAPI.DBContext;
 using TodoAPI.Middlewares;
 using TodoAPI.Repositories.TodoSubtasks;
 using TodoAPI.Repositories.TodoTasks;

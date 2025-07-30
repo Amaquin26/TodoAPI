@@ -1,7 +1,7 @@
 ﻿using TodoAPI.Entities;
 using TodoAPI.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
-using TodoAPI.Data;
+using TodoAPI.DBContext;
 
 namespace TodoAPI.Repositories.TodoSubtasks;
 

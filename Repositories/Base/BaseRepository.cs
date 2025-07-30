@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TodoAPI.Data;
+using TodoAPI.DBContext;
 
 namespace TodoAPI.Repositories.Base;
 
