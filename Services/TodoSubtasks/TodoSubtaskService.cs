@@ -62,7 +62,7 @@ public class TodoSubtaskService: ITodoSubtaskService
     {
         var existingTodoSubtask = await GetTodoSubtaskEntityById(todoSubtaskDto.Id);
         
-        existingTodoSubtask!.Name = todoSubtaskDto.Name;
+        existingTodoSubtask.Name = todoSubtaskDto.Name;
         
         _todoSubtaskRepository.Update(existingTodoSubtask);
         await _unitOfWork.CompleteAsync();
