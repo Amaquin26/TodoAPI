@@ -30,16 +30,16 @@ public class TodoTaskController: ControllerBase
     }
     
     [HttpPost]
-    public async Task<IActionResult> AddTodoTask([FromBody] TodoTaskAddDto taskDto)
+    public async Task<IActionResult> AddTodoTask([FromBody] TodoTaskAddDto todoTaskDto)
     {
-        var newTodoTaskId = await _todoTaskService.AddTodoTask(taskDto);
+        var newTodoTaskId = await _todoTaskService.AddTodoTask(todoTaskDto);
         return Ok(newTodoTaskId);
     }
     
     [HttpPut]
-    public async Task<IActionResult> UpdateTodoTask([FromBody] TodoTaskUpdateDto taskDto)
+    public async Task<IActionResult> UpdateTodoTask([FromBody] TodoTaskUpdateDto todoTaskDto)
     {
-        await _todoTaskService.UpdateTodoTask(taskDto);
+        await _todoTaskService.UpdateTodoTask(todoTaskDto);
         return NoContent();
     }
     
