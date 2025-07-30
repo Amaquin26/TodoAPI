@@ -52,6 +52,13 @@ public class TodoSubaskController: ControllerBase
         await _todoSubtaskService.UpdateTodoSubtask(todoSubtaskDto);
         return NoContent();
     }
+    
+    [HttpPatch("{id:int}")]
+    public async Task<IActionResult> ToggleTodoSubtaskCheckStatus(int id)
+    {
+        var newTodoSubtaskCheckStatus = await _todoSubtaskService.ToggleTodoSubtaskCheckStatus(id);
+        return Ok(newTodoSubtaskCheckStatus);
+    }
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteTodoSubtask(int id)

@@ -10,4 +10,5 @@ public interface ITodoSubtaskService
     Task<int> AddTodoSubtask(TodoSubtaskAddDto todoSubtaskDto);
     Task UpdateTodoSubtask(TodoSubtaskUpdateDto todoSubtaskDto);
     Task DeleteTodoSubtask(int id);
+    Task<bool> ToggleTodoSubtaskCheckStatus(int id);
 }

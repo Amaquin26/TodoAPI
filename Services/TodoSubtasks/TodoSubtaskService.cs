@@ -30,20 +30,14 @@ public class TodoSubtaskService: ITodoSubtaskService
     {
         var todoSubtasks = await _todoSubtaskRepository.GetAllByTodoTaskId(todoTaskId);
         
-        var todoSubtaskDtos = todoSubtasks.Select(TodoSubtaskReadDto.MapTodoSubtaskToTodoSubtaskReadDto)
-        .ToList();
+        var todoSubtaskDtos = todoSubtasks.Select(TodoSubtaskReadDto.MapTodoSubtaskToTodoSubtaskReadDto).ToList();
 
         return todoSubtaskDtos;
     }
 
     public async Task<TodoSubtaskReadDto?> GetTodoSubtaskById(int id)
     {
-        var todoSubtask = await _todoSubtaskRepository.GetByIdAsync(id);
-
-        if (todoSubtask == null)
-        {
-            throw new KeyNotFoundException($"Subtask with ID {id} not found.");
-        }
+        var todoSubtask = await GetTodoSubtaskEntityById(id);
 
         var todoSubtaskDto = TodoSubtaskReadDto.MapTodoSubtaskToTodoSubtaskReadDto(todoSubtask);
 
@@ -66,12 +60,7 @@ public class TodoSubtaskService: ITodoSubtaskService
 
     public async Task UpdateTodoSubtask(TodoSubtaskUpdateDto todoSubtaskDto)
     {
-        var existingTodoSubtask = await _todoSubtaskRepository.GetByIdAsync(todoSubtaskDto.Id);
-
-        if (existingTodoSubtask == null)
-        {
-            throw new KeyNotFoundException($"Subtask with ID {todoSubtaskDto.Id} not found.");
-        }
+        var existingTodoSubtask = await GetTodoSubtaskEntityById(todoSubtaskDto.Id);
         
         existingTodoSubtask!.Name = todoSubtaskDto.Name;
         
@@ -81,14 +70,30 @@ public class TodoSubtaskService: ITodoSubtaskService
 
     public async Task DeleteTodoSubtask(int id)
     {
+        var existingTodoSubtask = await GetTodoSubtaskEntityById(id);
+        
+        _todoSubtaskRepository.Remove(existingTodoSubtask);
+        await _unitOfWork.CompleteAsync();
+    }
+
+    public async Task<bool> ToggleTodoSubtaskCheckStatus(int id)
+    {
+        var existingTodoSubtask = await GetTodoSubtaskEntityById(id);
+        
+        existingTodoSubtask.IsChecked = !existingTodoSubtask.IsChecked;
+        await _unitOfWork.CompleteAsync();
+        return existingTodoSubtask.IsChecked;
+    }
+
+    private async Task<TodoSubtask> GetTodoSubtaskEntityById(int id)
+    {
         var existingTodoSubtask = await _todoSubtaskRepository.GetByIdAsync(id);
         
         if (existingTodoSubtask == null)
         {
             throw new KeyNotFoundException($"Subtask with ID {id} not found.");
         }
-        
-        _todoSubtaskRepository.Remove(existingTodoSubtask);
-        await _unitOfWork.CompleteAsync();
+
+        return existingTodoSubtask;
     }
 }
