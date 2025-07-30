@@ -18,97 +18,77 @@ public class TodoSubtaskService: ITodoSubtaskService
 
     public async Task<IEnumerable<TodoSubtaskReadDto>> GetAllTodoSubtask()
     {
-        var subtasks = await _todoSubtaskRepository.GetAllAsync();
+        var todoSubtasks = await _todoSubtaskRepository.GetAllAsync();
         
-        var subtaskDtos = subtasks.Select(subtask =>
-            new TodoSubtaskReadDto
-            {
-                Id = subtask.Id,
-                TodoTaskId = subtask.TodoTaskId,
-                Name = subtask.Name,
-                IsChecked = subtask.IsChecked
-            })
+        var todoSubtaskDtos = todoSubtasks.Select(TodoSubtaskReadDto.MapTodoSubtaskToTodoSubtaskReadDto)
         .ToList();
 
-        return subtaskDtos;
+        return todoSubtaskDtos;
     }
 
-    public async Task<IEnumerable<TodoSubtaskReadDto>> GetAllTodoSubtaskByTaskId(int taskId)
+    public async Task<IEnumerable<TodoSubtaskReadDto>> GetAllTodoSubtaskByTaskId(int todoTaskId)
     {
-        var subtasks = await _todoSubtaskRepository.GetAllByTodoTaskId(taskId);
+        var todoSubtasks = await _todoSubtaskRepository.GetAllByTodoTaskId(todoTaskId);
         
-        var subtaskDtos = subtasks.Select(subtask =>
-            new TodoSubtaskReadDto
-            {
-                Id = subtask.Id,
-                TodoTaskId = subtask.TodoTaskId,
-                Name = subtask.Name,
-                IsChecked = subtask.IsChecked
-            })
+        var todoSubtaskDtos = todoSubtasks.Select(TodoSubtaskReadDto.MapTodoSubtaskToTodoSubtaskReadDto)
         .ToList();
 
-        return subtaskDtos;
+        return todoSubtaskDtos;
     }
 
     public async Task<TodoSubtaskReadDto?> GetTodoSubtaskById(int id)
     {
-        var subtask = await _todoSubtaskRepository.GetByIdAsync(id);
+        var todoSubtask = await _todoSubtaskRepository.GetByIdAsync(id);
 
-        if (subtask == null)
+        if (todoSubtask == null)
         {
             throw new KeyNotFoundException($"Subtask with ID {id} not found.");
         }
 
-        var subtaskDto = new TodoSubtaskReadDto
-        {
-            Id = subtask.Id,
-            TodoTaskId = subtask.TodoTaskId,
-            Name = subtask.Name,
-            IsChecked = subtask.IsChecked
-        };
+        var todoSubtaskDto = TodoSubtaskReadDto.MapTodoSubtaskToTodoSubtaskReadDto(todoSubtask);
 
-        return subtaskDto;
+        return todoSubtaskDto;
     }
 
-    public async Task<int> AddTodoSubtask(TodoSubtaskAddDto subtaskDto)
+    public async Task<int> AddTodoSubtask(TodoSubtaskAddDto todoSubtaskDto)
     {
-        var subtask = new TodoSubtask
+        var todoSubtask = new TodoSubtask
         {
-            Name = subtaskDto.Name,
-            TodoTaskId = subtaskDto.TodoTaskId,
+            Name = todoSubtaskDto.Name,
+            TodoTaskId = todoSubtaskDto.TodoTaskId,
         };
 
-        await _todoSubtaskRepository.AddAsync(subtask);
+        await _todoSubtaskRepository.AddAsync(todoSubtask);
         await _unitOfWork.CompleteAsync();
 
-        return subtask.Id;
+        return todoSubtask.Id;
     }
 
-    public async Task UpdateTodoSubtask(TodoSubtaskUpdateDto subtaskDto)
+    public async Task UpdateTodoSubtask(TodoSubtaskUpdateDto todoSubtaskDto)
     {
-        var existingSubtask = await _todoSubtaskRepository.GetByIdAsync(subtaskDto.Id);
+        var existingTodoSubtask = await _todoSubtaskRepository.GetByIdAsync(todoSubtaskDto.Id);
 
-        if (existingSubtask == null)
+        if (existingTodoSubtask == null)
         {
-            throw new KeyNotFoundException($"Subtask with ID {subtaskDto.Id} not found.");
+            throw new KeyNotFoundException($"Subtask with ID {todoSubtaskDto.Id} not found.");
         }
         
-        existingSubtask!.Name = subtaskDto.Name;
+        existingTodoSubtask!.Name = todoSubtaskDto.Name;
         
-        _todoSubtaskRepository.Update(existingSubtask);
+        _todoSubtaskRepository.Update(existingTodoSubtask);
         await _unitOfWork.CompleteAsync();
     }
 
     public async Task DeleteTodoSubtask(int id)
     {
-        var existingSubtask = await _todoSubtaskRepository.GetByIdAsync(id);
+        var existingTodoSubtask = await _todoSubtaskRepository.GetByIdAsync(id);
         
-        if (existingSubtask == null)
+        if (existingTodoSubtask == null)
         {
             throw new KeyNotFoundException($"Subtask with ID {id} not found.");
         }
         
-        _todoSubtaskRepository.Remove(existingSubtask);
+        _todoSubtaskRepository.Remove(existingTodoSubtask);
         await _unitOfWork.CompleteAsync();
     }
 }

@@ -18,77 +18,66 @@ public class TodoTaskService: ITodoTaskService
     
     public async Task<IEnumerable<TodoTaskReadDto>> GetAllTodoTask()
     {
-        var tasks = await _todoTaskRepository.GetAllAsync();
+        var todoTasks = await _todoTaskRepository.GetAllAsync();
         
-        var taskDtos = tasks.Select(task => 
-            new TodoTaskReadDto {
-                Id = task.Id,
-                Title = task.Title,
-                Description = task.Description,
-            })
-        .ToList();
+        var todoTaskDtos = todoTasks.Select(TodoTaskReadDto.MapTodoTaskToTodoTaskReadDto).ToList();
 
-        return taskDtos;
+        return todoTaskDtos;
     }
     
     public async Task<TodoTaskReadDto?> GetTodoTaskById(int id)
     {
-        var task = await _todoTaskRepository.GetByIdAsync(id);
+        var todoTask = await _todoTaskRepository.GetByIdAsync(id);
 
-        if (task == null)
+        if (todoTask == null)
         {
             throw new KeyNotFoundException($"Task with ID {id} not found.");
         }
 
-        var taskDto = new TodoTaskReadDto
-        {
-            Id = task.Id,
-            Title = task.Title,
-            Description = task.Description,
-        };
-
-        return taskDto;
+        var todoTaskDto = TodoTaskReadDto.MapTodoTaskToTodoTaskReadDto(todoTask);
+        
+        return todoTaskDto;
     }
     
-    public async Task<int> AddTodoTask(TodoTaskAddDto taskDto)
+    public async Task<int> AddTodoTask(TodoTaskAddDto todoTaskDto)
     {
-        var task = new TodoTask
+        var todoTask = new TodoTask
         {
-            Title = taskDto.Title,
-            Description = taskDto.Description,
+            Title = todoTaskDto.Title,
+            Description = todoTaskDto.Description,
         };
 
-        await _todoTaskRepository.AddAsync(task);
+        await _todoTaskRepository.AddAsync(todoTask);
         await _unitOfWork.CompleteAsync();
-        return task.Id;
+        return todoTask.Id;
     }
     
-    public async Task UpdateTodoTask(TodoTaskUpdateDto taskDto)
+    public async Task UpdateTodoTask(TodoTaskUpdateDto todoTaskDto)
     {
-        var existingTask = await _todoTaskRepository.GetByIdAsync(taskDto.Id);
+        var existingTodoTask = await _todoTaskRepository.GetByIdAsync(todoTaskDto.Id);
 
-        if (existingTask == null)
+        if (existingTodoTask == null)
         {
-            throw new KeyNotFoundException($"Subtask with ID {taskDto.Id} not found.");
+            throw new KeyNotFoundException($"Subtask with ID {todoTaskDto.Id} not found.");
         }
         
-        existingTask.Title = taskDto.Title;
-        existingTask.Description = taskDto.Description;
+        existingTodoTask.Title = todoTaskDto.Title;
+        existingTodoTask.Description = todoTaskDto.Description;
 
-        _todoTaskRepository.Update(existingTask);
+        _todoTaskRepository.Update(existingTodoTask);
         await _unitOfWork.CompleteAsync();
     }
     
     public async Task DeleteTodoTask(int id)
     {
-        var existingTask = await _todoTaskRepository.GetByIdAsync(id);
+        var existingTodoTask = await _todoTaskRepository.GetByIdAsync(id);
         
-        if (existingTask == null)
+        if (existingTodoTask == null)
         {
             throw new KeyNotFoundException($"Subtask with ID {id} not found.");
         }
         
-        _todoTaskRepository.Remove(existingTask);
+        _todoTaskRepository.Remove(existingTodoTask);
         await _unitOfWork.CompleteAsync();
     }
 }

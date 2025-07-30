@@ -1,4 +1,6 @@
-﻿namespace TodoAPI.DTOs.TodoSubtasks;
+﻿using TodoAPI.Entities;
+
+namespace TodoAPI.DTOs.TodoSubtasks;
 
 public class TodoSubtaskReadDto
 {
@@ -9,4 +11,15 @@ public class TodoSubtaskReadDto
     public string Name { get; set; } = null!;
 
     public bool IsChecked { get; set; }
+
+    public static TodoSubtaskReadDto MapTodoSubtaskToTodoSubtaskReadDto(TodoSubtask todoSubtask)
+    {
+        return new TodoSubtaskReadDto
+        {
+            Id = todoSubtask.Id,
+            TodoTaskId = todoSubtask.TodoTaskId,
+            Name = todoSubtask.Name,
+            IsChecked = todoSubtask.IsChecked
+        };
+    }
 }

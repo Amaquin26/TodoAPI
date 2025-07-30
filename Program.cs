@@ -30,19 +30,12 @@ public class Program
         builder.Services.AddScoped<ITodoSubtaskService, TodoSubtaskService>();
         
         builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DockerDB")));
+            options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
         
         var app = builder.Build();
 
         // Middlewares
         app.UseMiddleware<ExceptionHandlingMiddleware>();
-        
-        // Automatically create the DB if it doesn't exist
-        using (var scope = app.Services.CreateScope())
-        {
-            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-            db.Database.EnsureCreated();
-        }
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())

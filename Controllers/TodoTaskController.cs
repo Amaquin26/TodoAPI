@@ -18,22 +18,22 @@ public class TodoTaskController: ControllerBase
     [HttpGet]
     public async Task<ActionResult> GetAll()
     {
-        var tasks = await _todoTaskService.GetAllTodoTask();
-        return Ok(tasks);
+        var todoTasks = await _todoTaskService.GetAllTodoTask();
+        return Ok(todoTasks);
     }
     
     [HttpGet("{id:int}")]
     public async Task<ActionResult> GetTodoTaskById(int id)
     {
-        var tasks = await _todoTaskService.GetTodoTaskById(id);
-        return Ok(tasks);
+        var todoTasks = await _todoTaskService.GetTodoTaskById(id);
+        return Ok(todoTasks);
     }
     
     [HttpPost]
     public async Task<IActionResult> AddTodoTask([FromBody] TodoTaskAddDto taskDto)
     {
-        var newTaskId = await _todoTaskService.AddTodoTask(taskDto);
-        return Ok(newTaskId);
+        var newTodoTaskId = await _todoTaskService.AddTodoTask(taskDto);
+        return Ok(newTodoTaskId);
     }
     
     [HttpPut]

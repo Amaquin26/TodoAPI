@@ -21,29 +21,29 @@ public class TodoSubaskController: ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<TodoSubtaskReadDto>>> GetAllTodoSubtask()
     {
-        var subtasks = await _todoSubtaskService.GetAllTodoSubtask();
-        return Ok(subtasks);
+        var todoSubtasks = await _todoSubtaskService.GetAllTodoSubtask();
+        return Ok(todoSubtasks);
     }
     
     [HttpGet("task/{taskId:int}")]
     public async Task<ActionResult<IEnumerable<TodoSubtaskReadDto>>> GetAllTodoSubtask(int taskId)
     {
-        var subtasks = await _todoSubtaskService.GetAllTodoSubtaskByTaskId(taskId);
-        return Ok(subtasks);
+        var todoSubtasks = await _todoSubtaskService.GetAllTodoSubtaskByTaskId(taskId);
+        return Ok(todoSubtasks);
     }
     
     [HttpGet("{id:int}")]
     public async Task<ActionResult<TodoSubtaskReadDto>> GetTodoSubtaskById(int id)
     {
-        var subtask = await _todoSubtaskService.GetTodoSubtaskById(id);
-        return Ok(subtask);
+        var todoSubtask = await _todoSubtaskService.GetTodoSubtaskById(id);
+        return Ok(todoSubtask);
     }
     
     [HttpPost]
     public async Task<ActionResult<int>> AddTodoSubtask([FromBody] TodoSubtaskAddDto dto)
     {
-        var newSubtaskId = await _todoSubtaskService.AddTodoSubtask(dto);
-        return Ok(newSubtaskId);
+        var newTodoSubtaskId = await _todoSubtaskService.AddTodoSubtask(dto);
+        return Ok(newTodoSubtaskId);
     }
 
     [HttpPut]
