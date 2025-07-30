@@ -27,12 +27,7 @@ public class TodoTaskService: ITodoTaskService
     
     public async Task<TodoTaskReadDto?> GetTodoTaskById(int id)
     {
-        var todoTask = await _todoTaskRepository.GetByIdAsync(id);
-
-        if (todoTask == null)
-        {
-            throw new KeyNotFoundException($"Task with ID {id} not found.");
-        }
+        var todoTask = await GetTodoTaskEntityById(id);
 
         var todoTaskDto = TodoTaskReadDto.MapTodoTaskToTodoTaskReadDto(todoTask);
         
@@ -54,12 +49,7 @@ public class TodoTaskService: ITodoTaskService
     
     public async Task UpdateTodoTask(TodoTaskUpdateDto todoTaskDto)
     {
-        var existingTodoTask = await _todoTaskRepository.GetByIdAsync(todoTaskDto.Id);
-
-        if (existingTodoTask == null)
-        {
-            throw new KeyNotFoundException($"Subtask with ID {todoTaskDto.Id} not found.");
-        }
+        var existingTodoTask = await GetTodoTaskEntityById(todoTaskDto.Id);
         
         existingTodoTask.Title = todoTaskDto.Title;
         existingTodoTask.Description = todoTaskDto.Description;
@@ -70,14 +60,21 @@ public class TodoTaskService: ITodoTaskService
     
     public async Task DeleteTodoTask(int id)
     {
-        var existingTodoTask = await _todoTaskRepository.GetByIdAsync(id);
+        var existingTodoTask = await GetTodoTaskEntityById(id);
         
+        _todoTaskRepository.Remove(existingTodoTask);
+        await _unitOfWork.CompleteAsync();
+    }
+
+    private async Task<TodoTask> GetTodoTaskEntityById(int id)
+    {
+        var existingTodoTask = await _todoTaskRepository.GetByIdAsync(id);
+
         if (existingTodoTask == null)
         {
             throw new KeyNotFoundException($"Subtask with ID {id} not found.");
         }
-        
-        _todoTaskRepository.Remove(existingTodoTask);
-        await _unitOfWork.CompleteAsync();
+
+        return existingTodoTask;
     }
 }
