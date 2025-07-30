@@ -2,6 +2,7 @@
 using TodoAPI.Repositories.TodoSubtasks;
 using TodoAPI.UnitOfWork;
 using TodoAPI.Entities;
+using TodoAPI.Infrastructure.Helpers;
 
 namespace TodoAPI.Services.TodoSubtasks;
 
@@ -91,7 +92,7 @@ public class TodoSubtaskService: ITodoSubtaskService
         
         if (existingTodoSubtask == null)
         {
-            throw new KeyNotFoundException($"Subtask with ID {id} not found.");
+            throw ExceptionHelper.NotFound<TodoSubtask>(id);
         }
 
         return existingTodoSubtask;
