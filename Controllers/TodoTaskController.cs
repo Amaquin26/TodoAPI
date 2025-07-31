@@ -22,7 +22,7 @@ public class TodoTaskController: ControllerBase
         return Ok(todoTasks);
     }
     
-    [HttpGet("{id:int}")]
+    [HttpGet("{id:int}", Name = "GetTodoTaskById")]
     public async Task<ActionResult> GetTodoTaskById(int id)
     {
         var todoTasks = await _todoTaskService.GetTodoTaskById(id);
@@ -33,7 +33,7 @@ public class TodoTaskController: ControllerBase
     public async Task<IActionResult> AddTodoTask([FromBody] TodoTaskAddDto todoTaskDto)
     {
         var newTodoTaskId = await _todoTaskService.AddTodoTask(todoTaskDto);
-        return Ok(newTodoTaskId);
+        return CreatedAtRoute("GetTodoTaskById",new {id = newTodoTaskId},newTodoTaskId);
     }
     
     [HttpPut]
